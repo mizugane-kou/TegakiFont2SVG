@@ -221,6 +221,6 @@ def create_images_with_text_from_file(output_folder, font_path, text_font_path):
 
 # 実行
 output_folder = "01_output_images"
-font_path = r"C:\$_Software\font\UI_Font\ZenKakuGothicNew-Black.ttf"
-text_font_path = r"C:\$_Software\font\UI_Font\BizinGothicDiscord-Bold.ttf"
+font_path = r"C:\your\font.ttf"
+text_font_path = r"C:\your\font.ttf"
 create_images_with_text_from_file(output_folder, font_path, text_font_path)
