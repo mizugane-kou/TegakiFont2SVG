@@ -49,7 +49,7 @@ def add_text_and_qr(pil_img, text, font, qr_img, width):
     draw.text((text_x, text_y), text, font=font, fill=(0, 0, 0))
     return pil_img
 
-def draw_frame(pil_img, width, height, text_font_path, text_characters):
+def draw_frame(pil_img, width, height, font_path, text_characters):
     draw = ImageDraw.Draw(pil_img)
     center_x, center_y = width // 2, height // 2
     frame_width, frame_height = 500 * 5, 500 * 6  # 枠のサイズ
@@ -72,8 +72,8 @@ def draw_frame(pil_img, width, height, text_font_path, text_characters):
         draw.line([(x1, line_y), (x2, line_y)], fill=(255, 255, 0), width=1)
 
     # テキストフォントとサイズを設定
-    text_font = ImageFont.truetype(text_font_path, 60)
-    unicode_font = ImageFont.truetype(text_font_path, 20)  # Unicode値のフォントサイズは小さく
+    text_font = ImageFont.truetype(font_path, 60)
+    unicode_font = ImageFont.truetype(font_path, 20)  # Unicode値のフォントサイズは小さく
     margin = 30
     char_index = 0
     for row in range(6):
@@ -141,7 +141,7 @@ def draw_frame(pil_img, width, height, text_font_path, text_characters):
 
             # Unicode値を正方形の下に表示
             unicode_value = f"U+{ord(text):04X}"  # Unicode値をU+XXXXの形式で表示
-            unicode_font = ImageFont.truetype(text_font_path, 45)
+            unicode_font = ImageFont.truetype(font_path, 45)
             unicode_bbox = draw.textbbox((0, 0), unicode_value, font=unicode_font) 
             unicode_width = unicode_bbox[2] - unicode_bbox[0] 
             unicode_height = unicode_bbox[3] - unicode_bbox[1] 
@@ -168,10 +168,13 @@ def add_aruco_markers(img, width, height):
         img[pos[1]:pos[1] + marker_size, pos[0]:pos[0] + marker_size] = cv2.cvtColor(ar_img, cv2.COLOR_GRAY2BGR)
     return img
 
-def create_images_with_text_from_file(output_folder, font_path, text_font_path):  
+def create_images_with_text_from_file(output_folder, font_path):  
     # 出力フォルダが存在しない場合は作成  
     if not os.path.exists(output_folder):  
         os.makedirs(output_folder)  
+        
+    if not os.path.exists('02_input_images'):  
+        os.makedirs('02_input_images')          
   
     width, height = setup_image_dimensions()  
     font_size = int(height * 0.02)  # フォントサイズをA4の2%に設定  
@@ -201,7 +204,7 @@ def create_images_with_text_from_file(output_folder, font_path, text_font_path):
         end_char = start_char + 30  
         chars_for_this_image = text_characters[start_char:end_char]  
   
-        pil_img = draw_frame(pil_img, width, height, text_font_path, chars_for_this_image)  
+        pil_img = draw_frame(pil_img, width, height, font_path, chars_for_this_image)  
         img = np.array(pil_img)  
         img = add_aruco_markers(img, width, height)  
 
@@ -222,5 +225,4 @@ def create_images_with_text_from_file(output_folder, font_path, text_font_path):
 # 実行
 output_folder = "01_output_images"
 font_path = r"C:\your\font.ttf"
-text_font_path = r"C:\your\font.ttf"
-create_images_with_text_from_file(output_folder, font_path, text_font_path)
+create_images_with_text_from_file(output_folder, font_path)
